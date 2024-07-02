@@ -7,10 +7,7 @@ text = "Hello, how are you? ich bin Max."
 tokenizer = tokenizer.tokenizer()
 input_indices = tokenizer.encode(text)
 
-input_size = 37000
-embedding_dim = 512
-
-def embedding_layer(input_indices):
+def embedding_layer(input_size, input_indices):
     embedding_layer = nn.Embedding(input_size, embedding_dim, padding_idx=1)
 
     input_indices = torch.LongTensor(input_indices)
@@ -27,6 +24,7 @@ def positional_encoding(seq_len, d_model):
             pos_enc[pos, i+1] = np.cos(pos / (10000 ** ((2 * (i+1))/d_model)))
     return pos_enc
 
+input_size = 37000
 seq_length = 128 # max_len에 따름
 embedding_dim = 512
 pos_encoding = positional_encoding(seq_length, embedding_dim)
@@ -35,7 +33,7 @@ print("Positional Encoding Shape:", pos_encoding.shape)
 
 # input embedding과 positional encoding을 더함
 pos_encoding = torch.FloatTensor(pos_encoding)
-embedded_input = embedding_layer(input_indices)
+embedded_input = embedding_layer(input_size, input_indices)
 pos_encoding = pos_encoding[:embedded_input.shape[0], :]
 embedded_input_with_pos = embedded_input + pos_encoding.unsqueeze(0)
 
