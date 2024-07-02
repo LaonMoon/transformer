@@ -10,7 +10,10 @@ This project is the unofficial implementation of NeurlIPS 2017 paper "Attention 
 
 ## Data
 
-Use IWSLT17 de-en. The following script downloads datasets.
+Use IWSLT17 de-en dataset. The following script downloads datasets.
 
 ```$ bash download.sh```
 
+And convert the dataset to JSON files.
+
+```$ python convert_to_json.py```
