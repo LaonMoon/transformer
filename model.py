@@ -10,28 +10,31 @@ class Embedding:
         self.input_indices = torch.LongTensor(input_indices)
 
     def embedding_layer(self):
-        embedding_layer = nn.Embedding(self.input_size, self.embedding_dim, padding_idx=1)
+        embedding_layer = nn.Embedding(self.input_size, self.embedding_dim, padding_idx=0) # padding_idx : index of pad token
         embedded_input = embedding_layer(self.input_indices)
-
         return embedded_input
-    
-    def positional_encoding(self, seq_len, d_model):
-        pos_enc = np.zeros((seq_len, d_model))
-        for pos in range(seq_len):
-            for i in range(0, d_model, 2):
-                pos_enc[pos, i] = np.sin(pos / (10000 ** ((2 * i)/d_model)))
-                pos_enc[pos, i+1] = np.cos(pos / (10000 ** ((2 * (i+1))/d_model)))
-        return pos_enc
+
+    def positional_encoding(self, seq_length, embedding_dim):
+        pos_encoding = np.zeros((seq_length, embedding_dim))
+        for pos in range(seq_length):
+            for i in range(0, embedding_dim, 2):
+                pos_encoding[pos, i] = np.sin(pos / (10000 ** ((2 * i)/embedding_dim)))
+                pos_encoding[pos, i+1] = np.cos(pos / (10000 ** ((2 * (i+1))/embedding_dim)))
+        return pos_encoding
     
     def forward(self):
         pos_encoding = self.positional_encoding(self.seq_length, self.embedding_dim)
-
-        # print("Positional Encoding Shape:", pos_encoding.shape)
-
-        # Add input embedding and positional encoding.
         pos_encoding = torch.FloatTensor(pos_encoding)
+
         embedded_input = self.embedding_layer()
-        pos_encoding = pos_encoding[:embedded_input.shape[0], :]
-        embedded_input_with_pos = embedded_input + pos_encoding.unsqueeze(0)
-        
+        pos_encoding = pos_encoding[:embedded_input.shape[0], :] # adjust for input sequence length
+
+        #print(pos_encoding.shape)
+        #print(embedded_input.shape)
+
+        # embedded_input_with_pos = embedded_input + pos_encoding.unsqueeze(0)
+        embedded_input_with_pos = embedded_input + pos_encoding
         return embedded_input_with_pos
+    
+# class dot_product_attention:
+# class multi_head_attention:

@@ -17,9 +17,9 @@ class Tokenizer:
             input=self.train_path, 
             model_prefix="sentencepiece", 
             vocab_size=37000,
-            character_coverage=1.0,
+            character_coverage=1.0, # amount of characters covered by the model
             # model_type='bpe',
-            user_defined_symbols='<pad>'
+            user_defined_symbols='<pad>' # add pad token
         )
         self.tokenizer = spm.SentencePieceProcessor()
     

@@ -7,8 +7,8 @@ from model import Embedding
 # # tokenizer 
 
 # # If you want to train new version of tokenizer then execute this code
-tokenizer = Tokenizer(train_path="train_de_en.json")
-tokenizer.train()
+# tokenizer = Tokenizer(train_path="train_de_en.json")
+# tokenizer.train()
 
 tokenizer = Tokenizer(train_path="train_de_en.json", model_path="sentencepiece.model")
 text = "Hello, This is a test of sentencepiece. Ich komme aus Korea. Schön, dich kennenzulernen."
@@ -26,9 +26,9 @@ print("Input indices:", input_indices)
 
 # # input embedding 
 
-# embedding = Embedding(input_indices)
-# embedded_input_with_pos = embedding.forward()
+embedding = Embedding(input_indices)
+embedded_input_with_pos = embedding.forward()
 
-# print("Embedded input with positional encoding:")
-# print(embedded_input_with_pos)
-# print("Shape of embedded input with positional encoding:", embedded_input_with_pos.shape)
+print("Embedded input with positional encoding:")
+print(embedded_input_with_pos)
+print("Shape of embedded input with positional encoding:", embedded_input_with_pos.shape)
