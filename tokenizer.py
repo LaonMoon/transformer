@@ -19,6 +19,7 @@ class Tokenizer:
             vocab_size=37000,
             character_coverage=1.0,
             model_type='bpe',
+            user_defined_symbols='<pad>'
         )
         self.tokenizer = spm.SentencePieceProcessor()
     
