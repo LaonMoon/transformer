@@ -17,3 +17,8 @@ Use IWSLT17 de-en dataset. The following script downloads datasets.
 And convert the dataset to JSON files.
 
 ```$ python convert_to_json.py```
+
+## Tokenizer
+
+- SentencePiece 
+- [ ] Assign different indices to UNK and PAD tokens.

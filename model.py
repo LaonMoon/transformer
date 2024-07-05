@@ -4,9 +4,9 @@ import numpy as np
 
 class Embedding:
     def __init__(self, input_indices):
-        self.input_size = 37000
-        self.seq_length = 128 # max_len에 따름
-        self.embedding_dim = 512
+        self.input_size = 37000 # vocab size 
+        self.seq_length = 256 # set arbitrarily
+        self.embedding_dim = 512 # d_model
         self.input_indices = torch.LongTensor(input_indices)
 
     def embedding_layer(self):
@@ -33,14 +33,5 @@ class Embedding:
         embedded_input = self.embedding_layer()
         pos_encoding = pos_encoding[:embedded_input.shape[0], :]
         embedded_input_with_pos = embedded_input + pos_encoding.unsqueeze(0)
-
-        # print("Input text:", text)
-        # print("Input indices:", input_indices)
-
-        # print("Embedded input:", embedded_input)
-        # print("Shape of embedded input:", embedded_input.shape)
-
-        # print("Embedded input with positional encoding:", embedded_input_with_pos)
-        # print("Shape of embedded input with positional encoding:", embedded_input_with_pos.shape)
         
         return embedded_input_with_pos
