@@ -21,7 +21,6 @@ class Tokenizer:
             model_type='bpe',
         )
         self.tokenizer = spm.SentencePieceProcessor()
-        self.tokenizer.load("sentencepiece.model")
     
     def load_model(self, model_path):
         self.tokenizer.load(model_path)
