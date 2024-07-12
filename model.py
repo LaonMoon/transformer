@@ -3,10 +3,10 @@ import torch.nn as nn
 import numpy as np
 
 class Embedding:
-    def __init__(self, input_indices):
-        self.input_size = 37000 # vocab size 
-        self.seq_length = 256 # set arbitrarily
-        self.embedding_dim = 512 # d_model
+    def __init__(self, input_indices, input_size = 37000, seq_length = 256, embedding_dim = 512):
+        self.input_size = input_size # vocab size 
+        self.seq_length = seq_length # set arbitrarily
+        self.embedding_dim = embedding_dim # d_model
         self.input_indices = torch.LongTensor(input_indices)
 
     def embedding_layer(self):
@@ -36,5 +36,41 @@ class Embedding:
         embedded_input_with_pos = embedded_input + pos_encoding
         return embedded_input_with_pos
     
-# class dot_product_attention:
-# class multi_head_attention:
+class Multi_head_attention:
+    def __init__(self, input, embedding_dim = 512, h = 8):
+        self.input = input
+        self.d_model = embedding_dim
+        self.h = h
+        self.d_k = self.d_model//self.h
+        self.d_v = self.d_model//self.h
+        # linear transform
+        self.W_Q = nn.Linear(self.d_model, self.d_k)
+        self.W_K = nn.Linear(self.d_model, self.d_k)
+        self.W_V = nn.Linear(self.d_model, self.d_v)
+        # Query, Key, Value
+        self.Q = self.W_Q(self.input)
+        self.K = self.W_K(self.input)
+        self.V = self.W_V(self.input)
+    def shape_QKV(self):
+        # Shape check
+        print("Q shape:", self.Q.shape)
+        print("K shape:", self.K.shape)
+        print("V shape:", self.V.shape)
+    def scaled_dot_product_attention(self):
+        # Q * K^T
+        Q_KT = torch.matmul(self.Q, self.K.transpose(-2, -1))
+        print("Q * K^T shape:", Q_KT.shape)
+        # Compute sqrt(d_k)
+        sqrt_dk = torch.sqrt(torch.tensor(self.d_k, dtype=torch.float32))
+        print("sqrt(d_k):", sqrt_dk)
+        # Normalize Q_KT
+        Q_KT_normalized = Q_KT / sqrt_dk
+        print("Normalized Q * K^T shape:", Q_KT_normalized.shape)
+        # Softmax(Q_KT_normalized)
+        attention_weights = torch.softmax(Q_KT_normalized, dim=-1)
+        print("Attention weights shape:", attention_weights.shape)
+        # Weighted V
+        output = torch.matmul(attention_weights, self.V)
+        print("Attention output shape:", output.shape) 
+        return output
+

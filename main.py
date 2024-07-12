@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from tokenizer import Tokenizer
-from model import Embedding
+from model import Embedding, Multi_head_attention
 
 # # tokenizer 
 
@@ -23,6 +23,7 @@ encoded_pieces = tokenizer.encode_as_pieces(text)
 print("Encoded as pieces:", encoded_pieces)
 input_indices = [tokenizer.tokenizer.piece_to_id(piece) for piece in tokenized_samples[0]]
 print("Input indices:", input_indices)
+print("Input indices shape:",len(input_indices))
 
 # # input embedding 
 
@@ -32,3 +33,9 @@ embedded_input_with_pos = embedding.forward()
 print("Embedded input with positional encoding:")
 print(embedded_input_with_pos)
 print("Shape of embedded input with positional encoding:", embedded_input_with_pos.shape)
+
+# # Encoder
+
+head = Multi_head_attention(embedded_input_with_pos)
+head.shape_QKV()
+head.scaled_dot_product_attention()
