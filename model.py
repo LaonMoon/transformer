@@ -2,8 +2,9 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-class Embedding:
+class Embedding(nn.Module):
     def __init__(self, input_indices, input_size = 37000, seq_length = 256, embedding_dim = 512):
+        super(Embedding, self).__init__()
         self.input_size = input_size # vocab size 
         self.seq_length = seq_length # set arbitrarily
         self.embedding_dim = embedding_dim # d_model
@@ -36,9 +37,9 @@ class Embedding:
         embedded_input_with_pos = embedded_input + pos_encoding
         return embedded_input_with_pos
     
-class Multi_head_attention:
-
+class Multi_head_attention(nn.Module):
     def __init__(self, input, embedding_dim = 512, h = 8):
+        super(Multi_head_attention, self).__init__()
         self.input = input
         self.d_model = embedding_dim
         self.h = h
@@ -62,6 +63,7 @@ class Multi_head_attention:
         print("V shape:", self.V.shape)
 
     def scaled_dot_product_attention(self):
+        # initialize Q, K, V
         Q = self.Q
         K = self.K
         V = self.V
@@ -89,9 +91,25 @@ class Multi_head_attention:
         for i in range(self.h):
             single_head = self.scaled_dot_product_attention()
             attention_outputs.append(single_head)
+            # print(attention_outputs)
         concatenated_heads = torch.cat(attention_outputs, dim=-1)
         print("Concat heads shape:", concatenated_heads.shape)
         # linear transformation
         output = self.W_O(concatenated_heads)
 
         return output
+    
+class Feed_forward_network(nn.Module):
+    def __init__(self, input, d_model = 512, inner_dim = 2048):
+        super(Feed_forward_network, self).__init__()
+        self.W1 = nn.Linear(d_model, inner_dim)
+        self.activation_function = nn.ReLU()
+        self.W2 = nn.Linear(inner_dim, d_model)
+        self.input = input
+       
+    def forward(self):
+        x = self.W1(self.input)
+        x = self.activation_function(x)
+        x = self.W2(x)
+
+        return x  

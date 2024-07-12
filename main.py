@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from tokenizer import Tokenizer
-from model import Embedding, Multi_head_attention
+from model import Embedding, Multi_head_attention, Feed_forward_network
 
 # # tokenizer 
 
@@ -42,3 +42,6 @@ head.scaled_dot_product_attention()
 
 attention_output = head.forward()
 print("Attention output shape:", attention_output.shape)
+
+output_tensor = Feed_forward_network(attention_output)
+print("Output shape:", output_tensor)
