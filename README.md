@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- requirements.txt 예정
+- To be updated
 
 ## Introduction
 
@@ -21,6 +21,17 @@ And convert the dataset to JSON files.
 ## Tokenizer
 
 - SentencePiece 
+    - de-en dataset
+    - vocab size : 37000
+
+## Model
+
+- seq_len = 256
+- d_model(embedding_dim) = 512
+
+### Embedding
+
+```class Embedding```
 
 ### To-Do
 
