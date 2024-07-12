@@ -37,6 +37,7 @@ class Embedding:
         return embedded_input_with_pos
     
 class Multi_head_attention:
+
     def __init__(self, input, embedding_dim = 512, h = 8):
         self.input = input
         self.d_model = embedding_dim
@@ -51,14 +52,21 @@ class Multi_head_attention:
         self.Q = self.W_Q(self.input)
         self.K = self.W_K(self.input)
         self.V = self.W_V(self.input)
+        # W_O
+        self.W_O = nn.Linear(self.d_model, self.d_model)
+
     def shape_QKV(self):
         # Shape check
         print("Q shape:", self.Q.shape)
         print("K shape:", self.K.shape)
         print("V shape:", self.V.shape)
+
     def scaled_dot_product_attention(self):
+        Q = self.Q
+        K = self.K
+        V = self.V
         # Q * K^T
-        Q_KT = torch.matmul(self.Q, self.K.transpose(-2, -1))
+        Q_KT = torch.matmul(Q, K.transpose(-2, -1))
         print("Q * K^T shape:", Q_KT.shape)
         # Compute sqrt(d_k)
         sqrt_dk = torch.sqrt(torch.tensor(self.d_k, dtype=torch.float32))
@@ -70,7 +78,20 @@ class Multi_head_attention:
         attention_weights = torch.softmax(Q_KT_normalized, dim=-1)
         print("Attention weights shape:", attention_weights.shape)
         # Weighted V
-        output = torch.matmul(attention_weights, self.V)
+        output = torch.matmul(attention_weights, V)
         print("Attention output shape:", output.shape) 
-        return output
 
+        return output
+    
+    def forward(self):
+        # multi-head attention
+        attention_outputs = []
+        for i in range(self.h):
+            single_head = self.scaled_dot_product_attention()
+            attention_outputs.append(single_head)
+        concatenated_heads = torch.cat(attention_outputs, dim=-1)
+        print("Concat heads shape:", concatenated_heads.shape)
+        # linear transformation
+        output = self.W_O(concatenated_heads)
+
+        return output

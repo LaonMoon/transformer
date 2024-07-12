@@ -39,3 +39,6 @@ print("Shape of embedded input with positional encoding:", embedded_input_with_p
 head = Multi_head_attention(embedded_input_with_pos)
 head.shape_QKV()
 head.scaled_dot_product_attention()
+
+attention_output = head.forward()
+print("Attention output shape:", attention_output.shape)
