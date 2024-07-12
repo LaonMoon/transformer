@@ -29,11 +29,12 @@ And convert the dataset to JSON files.
 - seq_len = 256
 - d_model(embedding_dim) = 512
 
-### Embedding
-
-```class Embedding```
+- Embedding : ```Class Embedding```
+- Multi-head attention : ```Class Multi_head_attention```
+- Feed-forward network : ```Class Feed_forward_network```
 
 ### To-Do
 
 - [ ] Assign different indices to UNK and PAD tokens.
 - [ ] Build multi-head by split linear matrices
+- [ ] Visualize attention map
