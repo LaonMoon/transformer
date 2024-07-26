@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 from tokenizer import Tokenizer
-from model import Embedding, Multi_head_attention, Feed_forward_network
+from model import Embedding, Multi_head_attention, Feed_forward_network, Encoder
 
 # # tokenizer 
 
@@ -36,15 +36,18 @@ print("Shape of embedded input with positional encoding:", embedded_input_with_p
 
 # # Multi_head_attention
 
-head = Multi_head_attention(embedded_input_with_pos)
-head.shape_QKV()
-head.scaled_dot_product_attention()
+# head = Multi_head_attention(embedded_input_with_pos)
+# head.shape_QKV()
+# head.scaled_dot_product_attention()
 
-attention_output = head.forward()
-print("multi_head Attention output shape:", attention_output.shape)
+# attention_output = head.forward()
+# print("multi_head Attention output shape:", attention_output.shape)
 
-output_tensor = Feed_forward_network(attention_output)
-print("Output shape:", output_tensor.forward().shape)
+# output_tensor = Feed_forward_network(attention_output)
+# print("Output shape:", output_tensor.forward().shape)
 
 # # Encoder
 
+encoder = Encoder(embedded_input_with_pos)
+encoder_output = encoder.forward()
+print("multi_head Attention output shape:", encoder_output.shape)
