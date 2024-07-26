@@ -51,3 +51,7 @@ print("Shape of embedded input with positional encoding:", embedded_input_with_p
 encoder = Encoder(embedded_input_with_pos)
 encoder_output = encoder.forward()
 print("multi_head Attention output shape:", encoder_output.shape)
+
+# # Decoder
+
+# # Transformer

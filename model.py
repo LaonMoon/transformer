@@ -38,11 +38,12 @@ class Embedding(nn.Module):
         return embedded_input_with_pos
     
 class Multi_head_attention(nn.Module):
-    def __init__(self, input, embedding_dim = 512, h = 8):
+    def __init__(self, input, mask = False, embedding_dim = 512, h = 8):
         super(Multi_head_attention, self).__init__()
         self.input = input
         self.d_model = embedding_dim
         self.h = h
+        self.mask = mask
         self.d_k = self.d_model//self.h
         self.d_v = self.d_model//self.h
         # linear transform
@@ -69,16 +70,24 @@ class Multi_head_attention(nn.Module):
         V = self.V
         # Q * K^T
         Q_KT = torch.matmul(Q, K.transpose(-2, -1))
-        print("Q * K^T shape:", Q_KT.shape)
+        #print("Q * K^T shape:", Q_KT.shape)
+        
         # Compute sqrt(d_k)
         sqrt_dk = torch.sqrt(torch.tensor(self.d_k, dtype=torch.float32))
         print("sqrt(d_k):", sqrt_dk)
+        
         # Normalize Q_KT
         Q_KT_normalized = Q_KT / sqrt_dk
         print("Normalized Q * K^T shape:", Q_KT_normalized.shape)
+
+        # for masked multi-head attention
+        if self.mask:
+            Q_KT_normalized = Q_KT_normalized.masked_fill(self.mask == 0, float('-inf'))
+        
         # Softmax(Q_KT_normalized)
         attention_weights = torch.softmax(Q_KT_normalized, dim=-1)
         print("Attention weights shape:", attention_weights.shape)
+        
         # Weighted V
         output = torch.matmul(attention_weights, V)
         print("scaled_dot Attention output shape:", output.shape) 
