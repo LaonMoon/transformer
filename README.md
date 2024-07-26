@@ -8,6 +8,8 @@
 
 This project is the unofficial implementation of NeurlIPS 2017 paper "Attention is All You Need".
 
+You can run the entire process of transformer at ```main.py```.
+
 ## Data
 
 Use IWSLT17 de-en dataset. The following script downloads datasets.
@@ -28,10 +30,6 @@ And convert the dataset to JSON files.
 
 - seq_len = 256
 - d_model(embedding_dim) = 512
-
-- Embedding : ```Class Embedding```
-- Multi-head attention : ```Class Multi_head_attention```
-- Feed-forward network : ```Class Feed_forward_network```
 
 ## To-Do
 
