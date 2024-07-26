@@ -81,7 +81,7 @@ class Multi_head_attention(nn.Module):
         print("Attention weights shape:", attention_weights.shape)
         # Weighted V
         output = torch.matmul(attention_weights, V)
-        print("Attention output shape:", output.shape) 
+        print("scaled_dot Attention output shape:", output.shape) 
 
         return output
     
@@ -111,5 +111,30 @@ class Feed_forward_network(nn.Module):
         x = self.W1(self.input)
         x = self.activation_function(x)
         x = self.W2(x)
-
         return x  
+    
+class Encoder(nn.Module):
+    # residual connection
+    def __init__(self, input, layer_num = 6, d_model = 512, h = 8):
+        super(Encoder, self).__init__()
+        self.d_model = d_model
+        self.h = h # num_heads
+        self.layer_num = layer_num
+        self.input = input
+        self.norm = nn.LayerNorm(d_model) # layer normalization
+        self.dropout = nn.Dropout(0.1)
+    def sub_layer(self, input):
+        self_attention = Multi_head_attention(input, self.d_model, self.h)
+        attention_output = self_attention.forward()
+        # residual -> layer normalization 
+        sublayer1_residual = input + attention_output
+        sublayer1_output = self.norm(sublayer1_residual)
+        ffnn_output = Feed_forward_network(sublayer1_output)
+        sublayer2_residual = self.input + ffnn_output
+        sublayer2_output = self.norm(sublayer2_residual)
+        return sublayer2_output
+    def forward(self):
+        sub_layer = sub_layer(self.input)
+        for i in range(self.layer_num - 1):
+            sub_layer = sub_layer(sub_layer)
+        return sub_layer

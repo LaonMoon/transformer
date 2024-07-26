@@ -34,14 +34,17 @@ print("Embedded input with positional encoding:")
 print(embedded_input_with_pos)
 print("Shape of embedded input with positional encoding:", embedded_input_with_pos.shape)
 
-# # Encoder
+# # Multi_head_attention
 
 head = Multi_head_attention(embedded_input_with_pos)
 head.shape_QKV()
 head.scaled_dot_product_attention()
 
 attention_output = head.forward()
-print("Attention output shape:", attention_output.shape)
+print("multi_head Attention output shape:", attention_output.shape)
 
 output_tensor = Feed_forward_network(attention_output)
-print("Output shape:", output_tensor)
+print("Output shape:", output_tensor.forward().shape)
+
+# # Encoder
+
